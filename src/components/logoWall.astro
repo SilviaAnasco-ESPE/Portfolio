@@ -1,67 +1,74 @@
 ---
 const technologies = [
-  "astro",
-  "react",
-  "typeScript",
-  "tailwindcss",
-  "nodejs",
-  "HTML5",
-  "CSS3",
-  "javaScript",
-  "git",
-  "supabase",
-  "mysql",
-  "bash",
+  "nextjs", "react", "CSS3", "tailwindcss", "nodejs", "expressjs", "CSharp",
+  "django", "oracle", "postgreSQL", "mongoDB", "docker", "AWS", "flutter"
 ];
+
+// Divide en dos columnas
+const mid = Math.ceil(technologies.length / 2);
+const firstColumn = technologies.slice(0, mid);
+const secondColumn = technologies.slice(mid);
 ---
 
-<div class="relative overflow-x-hidden py-8">
-  <div
-    class="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[var(--background)] to-transparent z-20"
-  >
-  </div>
-  <div
-    class="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[var(--background)] to-transparent z-20"
-  >
-  </div>
-
-  <div class="flex animate-scroll hover:animate-paused gap-12 md:gap-20 w-max">
-    {
-      [...technologies, ...technologies, ...technologies].map((tech) => (
-        <div class="flex items-center gap-2 group transition-all duration-300">
+<div class="relative flex justify-center gap-12 md:gap-20 py-8">
+  {/* Columna 1 - Scroll hacia arriba */}
+  <div class="h-40 overflow-hidden">
+    <div class="flex flex-col animate-scroll-up hover:animate-paused">
+      {[...firstColumn, ...firstColumn, ...firstColumn].map((tech) => (
+        <div class="flex items-center gap-2 group py-2">
           <img
-            src={`/svg/${tech}.svg`}
+            src={`/svg/${encodeURIComponent(tech)}.svg`}
             alt={tech}
-            class="h-7 w-auto object-contain transition-transform group-hover:scale-110 opacity-60"
-            width="30"
-            height="30"
+            class="h-11 w-11 object-contain transition-transform group-hover:scale-110 opacity-60 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] overflow-visible ml-4"
+            width="45"
+            height="45"
             loading="lazy"
           />
           <span class="text-lg font-medium text-[var(--white-icon)]">
-            {tech.charAt(0).toUpperCase() + tech.slice(1)}
+            {tech.includes("Sharp") ? "C#" : tech.charAt(0).toUpperCase() + tech.slice(1)}
           </span>
         </div>
-      ))
-    }
+      ))}
+    </div>
+  </div>
+
+  {/* Columna 2 - Scroll hacia abajo */}
+  <div class="h-40 overflow-hidden">
+    <div class="flex flex-col animate-scroll-down hover:animate-paused">
+      {[...secondColumn,...secondColumn,...secondColumn].map((tech) => (
+        <div class="flex items-center gap-2 group py-2">
+          <img
+            src={`/svg/${encodeURIComponent(tech)}.svg`}
+           class="h-11 w-11 object-contain transition-transform group-hover:scale-110 opacity-60 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] overflow-visible ml-4"
+            width="45"
+            height="45"
+            loading="lazy"
+          />
+          <span class="text-lg font-medium text-[var(--white-icon)]">
+            {tech.includes("Sharp") ? "C#" : tech.charAt(0).toUpperCase() + tech.slice(1)}
+          </span>
+        </div>
+      ))}
+    </div>
   </div>
 </div>
 
 <style is:global>
-  @keyframes scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
+  @keyframes scrollUp {
+    from { transform: translateY(0%); }
+    to { transform: translateY(-100%); }
   }
-  .animate-scroll {
-    animation: scroll 60s linear infinite;
+  @keyframes scrollDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0%); }
   }
-
-  @media (min-width: 768px) {
-    .animate-scroll {
-      animation-duration: 50s;
-    }
+  .animate-scroll-up {
+    animation: scrollUp 20s linear infinite;
+  }
+  .animate-scroll-down {
+    animation: scrollDown 20s linear infinite;
+  }
+  .animate-paused:hover {
+    animation-play-state: paused;
   }
 </style>

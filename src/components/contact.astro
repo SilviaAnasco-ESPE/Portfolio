@@ -11,27 +11,30 @@
         </p>
         <div class="flex items-center gap-2">
           <span>Location:</span>
-          <span class="text-[var(--white)]">Colombia, Valle del cauca</span>
+          <span class="text-[var(--white)]">Ecuador, Quito</span>
         </div>
       </div>
 
       <div>
         <form
           id="contact-form"
-          action="https://formspree.io/f/mnnjznkj"
+          action="https://api.web3forms.com/submit"
           method="POST"
           class="flex flex-col gap-4"
         >
+          <!-- Web3Forms Access Key -->
+          <input type="hidden" name="access_key" value="a29acad6-4b46-480c-977c-8efb4fe968d1"/>
+          
           <input
             type="text"
-            name="from_name"
+            name="name"
             placeholder="Name"
             required
             class="px-4 py-2 bg-[#1414149c] text-[var(--white)] border border-[var(--white-icon-tr)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--sec)]"
           />
           <input
             type="email"
-            name="reply_to"
+            name="email"
             placeholder="Email"
             required
             class="px-4 py-2 bg-[#1414149c] text-[var(--white)] border border-[var(--white-icon-tr)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--sec)]"
@@ -56,37 +59,63 @@
         >
           ✅ Thank you for your message!
         </div>
+        <div
+          id="form-error"
+          class="hidden justify-center items-center mt-4 text-red-500 text-lg"
+        >
+          ❌ There was a problem sending your message. Please try again.
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<script type="module" is:inline>
-  const form = document.getElementById("contact-form");
-  const formMessage = document.getElementById("form-message");
+<script type="module">
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contact-form');
+  const formMessage = document.getElementById('form-message');
+  const formError = document.getElementById('form-error');
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
 
+    // Reset previous messages
+    formMessage.classList.add('hidden');
+    formError.classList.add('hidden');
+
     try {
       const response = await fetch(form.action, {
-        method: "POST",
+        method: 'POST',
         body: formData,
-        headers: { Accept: "application/json" },
+        headers: { 
+          'Accept': 'application/json',
+        },
       });
-      if (response.ok) {
+
+      // Log the entire response for debugging
+      console.log('Response status:', response.status);
+      
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+
+      // Web3Forms typically returns success:true when submission is successful
+      if (response.ok && responseData.success) {
         form.reset();
-        form.style.display = "none";
-        formMessage.classList.remove("hidden");
+        form.style.display = 'none';
+        formMessage.classList.remove('hidden');
+        formMessage.classList.add('flex');
       } else {
-        const data = await response.json();
-        console.error("Error response:", data);
-        alert("There was a problem sending your message.");
+        // Show error message if submission fails
+        throw new Error(responseData.message || 'Submission failed');
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("There was a problem sending your message.");
+      console.error('Error:', error);
+      
+      // Show error message
+      formError.classList.remove('hidden');
+      formError.classList.add('flex');
     }
   });
+});
 </script>
